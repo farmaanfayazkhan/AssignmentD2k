@@ -4,7 +4,7 @@ import pandas as pd
 # Connect to SQLite database
 conn = sqlite3.connect('nyc_taxi_data_2019.db')
 
-# Example query: Average trip distance per month
+# Average trip distance per month
 query = '''
     SELECT strftime('%Y-%m', tpep_pickup_datetime) AS month, AVG(trip_distance) AS avg_trip_distance
     FROM trips
@@ -14,7 +14,7 @@ query = '''
 df_avg_trip_distance = pd.read_sql(query, conn)
 print(df_avg_trip_distance)
 
-# Example query: Total number of trips per month
+#Total number of trips per month
 query = '''
     SELECT strftime('%Y-%m', tpep_pickup_datetime) AS month, COUNT(*) AS total_trips
     FROM trips
@@ -24,7 +24,7 @@ query = '''
 df_total_trips = pd.read_sql(query, conn)
 print(df_total_trips)
 
-# Example visualization using matplotlib
+# visualization using matplotlib
 import matplotlib.pyplot as plt
 
 # Plotting average trip distance per month
