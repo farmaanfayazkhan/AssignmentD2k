@@ -1,0 +1,78 @@
+Develop SQL queries to answer the following questions:
+    1. What are the peak hours for taxi usage?
+    2. How does passenger count affect the trip fare?
+    3. What are the trends in usage over the year?
+Create visualizations to represent the findings?
+
+
+1. What are the peak hours for taxi usage?
+#Sql query
+
+SELECT strftime('%H', pickup_datetime) AS hour, COUNT(*) AS trip_count
+FROM trips
+GROUP BY hour
+ORDER BY trip_count DESC;
+
+#Visualisation
+import pandas as pd
+import matplotlib.pyplot as plt
+from sqlalchemy import create_engine
+
+engine = create_engine('sqlite:///nyc_taxi.db')
+query = """
+SELECT strftime('%H', pickup_datetime) AS hour, COUNT(*) AS trip_count
+FROM trips
+GROUP BY hour
+ORDER BY trip_count DESC;
+"""
+df = pd.read_sql(query, engine)
+df.plot(kind='bar', x='hour', y='trip_count', title='Peak Hours for Taxi Usage')
+plt.xlabel('Hour of Day')
+plt.ylabel('Number of Trips')
+plt.show()
+
+2. How does passenger count affect the trip fare?
+
+#sql query
+SELECT passenger_count, AVG(fare_amount) AS avg_fare
+FROM trips
+GROUP BY passenger_count
+ORDER BY passenger_count;
+
+#visualisation
+query = """
+SELECT passenger_count, AVG(fare_amount) AS avg_fare
+FROM trips
+GROUP BY passenger_count
+ORDER BY passenger_count;
+"""
+df = pd.read_sql(query, engine)
+df.plot(kind='bar', x='passenger_count', y='avg_fare', title='Passenger Count vs. Trip Fare')
+plt.xlabel('Passenger Count')
+plt.ylabel('Average Fare ($)')
+plt.show()
+
+3.  Trends in Usage Over the Year
+
+#sql query 
+SELECT strftime('%m', pickup_datetime) AS month, COUNT(*) AS trip_count
+FROM trips
+GROUP BY month
+ORDER BY month;
+
+#Visualisation
+query = """
+SELECT strftime('%m', pickup_datetime) AS month, COUNT(*) AS trip_count
+FROM trips
+GROUP BY month
+ORDER BY month;
+"""
+df = pd.read_sql(query, engine)
+df['month'] = df['month'].astype(int)
+df.plot(kind='line', x='month', y='trip_count', marker='o', title='Trends in Taxi Usage Over the Year')
+plt.xlabel('Month')
+plt.ylabel('Number of Trips')
+plt.xticks(df['month'], ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+plt.show()
+
+
